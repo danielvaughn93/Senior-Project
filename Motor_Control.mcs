@@ -1,0 +1,19 @@
+[Header]
+MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
+Version=1.0
+[File000]
+Location=C:\Users\Daniel\Documents\GitHub\Senior-Project\main.o
+Folder=Intermediary
+DeviceName=dsPIC33FJ16GS502
+LanguageToolSuiteID={9BCCB495-CD65-480A-BA76-63D8E78B117F}
+LanguageToolID={B1442D91-FF1F-4E60-9714-C39C1BA9DB62}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\xc16\v1.22\bin\xc16-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)|C:\Program Files (x86)\Microchip\xc16\v1.22\src\libm||$(INCDIR)|C:\Program Files (x86)\Microchip\xc16\v1.22\inc||$(LIBDIR)|C:\Program Files (x86)\Microchip\xc16\v1.22\lib||$(LKRDIR)||
+SOLK=<src>|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=-g -Wall
+TraceCmdString=
+DebugOptions=-D__DEBUG
+[TOOL_LOC_STAMPS]
+tool_loc{B1442D91-FF1F-4E60-9714-C39C1BA9DB62}=C:\Program Files (x86)\Microchip\xc16\v1.22\bin\xc16-gcc.exe
+tool_loc{6836D8CA-42BB-48FB-9E77-3F0AA8005073}=C:\Program Files (x86)\Microchip\xc16\v1.22\bin\xc16-ld.exe

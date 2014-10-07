@@ -48,10 +48,10 @@ Program Memory  [Origin = 0x200, Length = 0x2a00]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200                0x9e            0xed  (237)
-.text                        0x29e               0x126           0x1b9  (441)
-.dinit                       0x3c4                 0x2             0x3  (3)
+.text                        0x29e               0x13a           0x1d7  (471)
+.dinit                       0x3d8                 0x2             0x3  (3)
 
-                     Total program memory used (bytes):          0x2a9  (681) 4%
+                     Total program memory used (bytes):          0x2c7  (711) 4%
 
 
 Data Memory  [Origin = 0x800, Length = 0x800]
@@ -76,10 +76,11 @@ External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
-                  0x00023c                  __data_init_standard
                   0x00023c                  __data_init
+                  0x00023c                  __data_init_standard
                   0x00029a                  __DefaultInterrupt
                   0x00029e                  _main
+                  0x0003c6                  _blink_led
 
 External Symbols in Program Memory (by name):
 
@@ -88,6 +89,7 @@ External Symbols in Program Memory (by name):
                   0x00023c                  __data_init_standard
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
+                  0x0003c6                  _blink_led
                   0x00029e                  _main
 
 Memory Configuration
@@ -1177,9 +1179,10 @@ __c30_signature
  __c30_signature
                   0x00000c          0x6 c:/program files (x86)/microchip/xc16/v1.22/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
 
-.text             0x00029e        0x126
- .text            0x00029e        0x126 main.o
+.text             0x00029e        0x13a
+ .text            0x00029e        0x13a main.o
                   0x00029e                  main
+                  0x0003c6                  blink_led
 
-.dinit            0x0003c4          0x2
- .dinit           0x0003c4          0x2 data_init
+.dinit            0x0003d8          0x2
+ .dinit           0x0003d8          0x2 data_init
