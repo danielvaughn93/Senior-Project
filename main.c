@@ -13,7 +13,7 @@
 #define FCY (3685000UL) // for delay routines
 #include <libpic30.h>
 //functions
-void blink_led(void);
+void blink_led5(void);
 void pwmtest(void);
 void init_pwm(void);
  
@@ -23,14 +23,17 @@ void init_pwm(void);
  //Enable clock switching
  _FOSC(FCKSM_CSECMD & OSCIOFNC_OFF); 	//Clock switching mode enabled and fail safe clock monitor disabled & OSCO is general purpose IO pin
  _FWDT(FWDTEN_OFF); //Watchdog timer disabled
- _FPOR(FPWRT_PWR128); //Power-on reset timer is set to 128ms
+ _FPOR(FPWRT_PWR128); //Power-on reset timer is set to 128ms 
  _FICD(ICS_PGD2 & JTAGEN_OFF); //Use PGD2 and PGC2 for ICS & JTAG disabled
 
  //Main function
 int main(void){
-	blink_led();
-}
-void fun(void){
+//	blink_led5();
+/*Disable Pwm Module before start setting any associated registers*/
+	PMD6bits.PWM1MD=1;
+	PMD6bits.PWM2MD=1;
+	PMD6bits.PWM3MD=1;
+//	blink_led5();
  /* Configure Oscillator to operate the device at 40Mhz
 	   Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
  	   Fosc= 7.37*(43)/(2*2)=80Mhz for Fosc, Fcy = 40Mhz */
@@ -38,13 +41,14 @@ void fun(void){
 	PLLFBD=41; 				/* M = PLLFBD + 2 */
 	CLKDIVbits.PLLPOST=0;   /* N1 = 2 */
 	CLKDIVbits.PLLPRE=0;    /* N2 = 2 */
-
-    __builtin_write_OSCCONH(0x01);			/* New Oscillator FRC w/ PLL */
-    __builtin_write_OSCCONL(0x01);  		/* Enable Switch */
-      
+//	blink_led5();
+  // __builtin_write_OSCCONH(0x01);			/* New Oscillator FRC w/ PLL */
+   // __builtin_write_OSCCONL(0x01);  		/* Enable Switch */
+	blink_led5();      
 	while(OSCCONbits.COSC != 0b001);		/* Wait for new Oscillator to become FRC w/ PLL */  
-    while(OSCCONbits.LOCK != 1);			/* Wait for Pll to Lock */
-
+//	blink_led5(); 
+	while(OSCCONbits.LOCK != 1);			/* Wait for Pll to Lock */
+//	blink_led5();
 	/* Now setup the ADC and PWM clock for 120MHz
 	   ((FRC * 16) / APSTSCLR ) = (7.37 * 16) / 1 = ~ 120MHz*/
 
@@ -54,21 +58,73 @@ void fun(void){
 	ACLKCONbits.ENAPLL = 1;					/* Enable Auxiliary PLL */
 	
 	while(ACLKCONbits.APLLCK != 1);			/* Wait for Auxiliary PLL to Lock */
-    blink_led();
-	init_pwm();
+	PTCONbits.PTEN = 0;						/* Disable PWM */
+	PTCONbits.PTSIDL = 0;					/* PWM runs in idle mode */
+	PTCON2bits.PCLKDIV = 0;					/* PWM Input Clock Prescaler = 1*/
+	MDC = 255;								/* Set Duty Cycle = 50% */
+/*									SETUP PWM MOD 1				*/
+	PWMCON1bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
+	PWMCON1bits.MDCS = 1;					/* MDC register provides duty cycle for x PWM generator */
+	PWMCON1bits.CAM = 1;					/* Enable center-aligned mode */
+	PWMCON1bits.XPRES = 0;					/* External pins do not affect PWM time base */
+	PWMCON1bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
+    IOCON1bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
+    IOCON1bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
+    IOCON1bits.PMOD = 3;   					/* Select Independent Output PWM mode */
+
+    PWMCON1bits.CAM = 1;                    /* Select Center-aligned mode */
+    PWMCON1bits.ITB = 1;                    /* Select Independent timebase mode (required for
+                                               center-aligned mode) */
+	
+    PHASE1 = 1202;             				/* In Center-aligned mode the effective period of 
+                                               the PWM signal is twice of the value in the 
+                                               PHASEx register. So to obtain signal of 400kHz
+                                               (or 2.5us period), the PHASE1 register should be
+                                               configured for a period of 1.25us.
+                                               PHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
+                                               period is 2.5us. */
+
+    SPHASE1 = 1202;             			/* In Center-aligned mode the effective period of 
+                                               the PWM signal is twice of the value in the 
+                                               SPHASEx register. So to obtain signal of 400kHz
+                                               (or 2.5us period), the SPHASE1 register should be
+                                               configured for a period of 1.25us.
+                                               SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
+                                               period is 2.5us. */
+                                               
+    PDC1 = 601;                 			/* In Center-aligned mode the effective duty cycle of 
+                                               the PWM signal is twice of the value in the 
+                                               PDCx register. To achieve 50% duty cycle configure
+                                               PDCx register to 0.625us.
+                                               PDC1 = ((0.625us) / 1.04ns) = 601. */
     
-    while(1);                   			/* Infinite Loop */
+    SDC1 = 301;                 			/* In Center-aligned mode the effective duty cycle of 
+                                               the PWM signal is twice of the value in the 
+                                               SDCx register. To achieve 25% duty cycle configure
+                                               PDCx register to 0.312us.
+                                               PDC2 = ((0.312us) / 1.04ns) = 301. */
+    
+
+	
+	PTCONbits.PTEN = 1;						/*  Enable PWM   */	
+	PMD6bits.PWM1MD = 0;
+	PMD6bits.PWM2MD = 0;
+	PMD6bits.PWM3MD = 0;
+//	blink_led5();
+	while(1);								/* Dead Loop */
+
  }
 
-void blink_led(void){
-     TRISB = 0x0000; // Set PORTB to output
+void blink_led5(void){
+    int i; 
+	TRISB = 0x0000; // Set PORTB to output
      ADPCFG = 0xFFFF; // Set all pins to digital
   
-     while (1) {
+      for(i=0;i<5;i++) {
          LATB = 0xFFFF; // turn all LEDs ON
-         __delay_ms(500); // wait 500 ms
+         __delay_ms(50); // wait 500 ms
          LATB = 0x0000; // turn all LEDs OFF
-         __delay_ms(500); // wait 500 ms
+         __delay_ms(50); // wait 500 ms
      }
 }
 void init_pwm(void){
@@ -139,8 +195,11 @@ void init_pwm(void){
                                                PDC1 = ((0.625us) / 1.04ns) = 601. */
     
 
-    PTCONbits.PTEN = 1;			   			/* Enable the PWM Module */
- 
+    PMD6bits.PWM1MD = 0;			   			/* Enable the PWM Modules */
+	PMD6bits.PWM2MD = 0; 	
+	PMD6bits.PWM3MD = 0;
+
+
 }
 
 void pwmtest(void){
