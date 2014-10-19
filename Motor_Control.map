@@ -25,6 +25,7 @@ Command:
   -LC:\Program Files (x86)\Microchip\xc16\v1.22\lib \
   -Tp33FJ16GS502.gld.00 \
   --defsym=__MPLAB_BUILD=1 \
+  --defsym=__MPLAB_DEBUG=1 \
   -Map=Motor_Control.map \
   --report-mem \
   -start-group \
@@ -49,10 +50,10 @@ Program Memory  [Origin = 0x200, Length = 0x2a00]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200                0xba           0x117  (279)
-.text                        0x2ba               0x23c           0x35a  (858)
-.dinit                       0x4f6                 0x2             0x3  (3)
+.text                        0x2ba               0x2c8           0x42c  (1068)
+.dinit                       0x582                 0x2             0x3  (3)
 
-                     Total program memory used (bytes):          0x474  (1140) 7%
+                     Total program memory used (bytes):          0x546  (1350) 8%
 
 
 Data Memory  [Origin = 0x800, Length = 0x800]
@@ -78,13 +79,14 @@ External Symbols in Program Memory (by address):
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
                   0x00023c                  ___delay32
-                  0x000258                  __data_init_standard
                   0x000258                  __data_init
+                  0x000258                  __data_init_standard
                   0x0002b6                  __DefaultInterrupt
                   0x0002ba                  _main
-                  0x000354                  _blink_led5
-                  0x000384                  _init_pwm
-                  0x0003cc                  _pwmtest
+                  0x00035e                  _blink_led5
+                  0x00038a                  _init_pwm
+                  0x00042a                  _pwmtest
+                  0x000554                  _start_PWM
 
 External Symbols in Program Memory (by name):
 
@@ -94,10 +96,11 @@ External Symbols in Program Memory (by name):
                   0x000258                  __data_init_standard
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
-                  0x000354                  _blink_led5
-                  0x000384                  _init_pwm
+                  0x00035e                  _blink_led5
+                  0x00038a                  _init_pwm
                   0x0002ba                  _main
-                  0x0003cc                  _pwmtest
+                  0x00042a                  _pwmtest
+                  0x000554                  _start_PWM
 
 Memory Configuration
 
@@ -1168,6 +1171,7 @@ __FUID1
                     0x0220                  UART1 = 0x220
                     0x0220                  _UART1 = 0x220
                     0x0001                  __MPLAB_BUILD = 0x1
+                    0x0001                  __MPLAB_DEBUG = 0x1
 START GROUP
 LOAD c:/program files (x86)/microchip/xc16/v1.22/bin/bin/../../lib\libfx-coff.a
 LOAD c:/program files (x86)/microchip/xc16/v1.22/bin/bin/../../lib\libpic30-coff.a
@@ -1189,12 +1193,13 @@ __c30_signature
  __c30_signature
                   0x000012          0x6 c:/program files (x86)/microchip/xc16/v1.22/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
 
-.text             0x0002ba        0x23c
- .text            0x0002ba        0x23c main.o
+.text             0x0002ba        0x2c8
+ .text            0x0002ba        0x2c8 main.o
                   0x0002ba                  main
-                  0x000354                  blink_led5
-                  0x000384                  init_pwm
-                  0x0003cc                  pwmtest
+                  0x00035e                  blink_led5
+                  0x00038a                  init_pwm
+                  0x00042a                  pwmtest
+                  0x000554                  start_PWM
 
-.dinit            0x0004f6          0x2
- .dinit           0x0004f6          0x2 data_init
+.dinit            0x000582          0x2
+ .dinit           0x000582          0x2 data_init
