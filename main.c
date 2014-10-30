@@ -67,15 +67,15 @@ int main(void){
 
 	init_timer1();
 	init_pwm();
-	/*IOCON1bits.PENL = 0;
+	IOCON1bits.PENL = 0;
 	IOCON1bits.PENH = 0;
 	IOCON2bits.PENL = 0;
 	IOCON2bits.PENH = 0;
 	IOCON3bits.PENL = 0;
-	IOCON3bits.PENH = 0;*/
+	IOCON3bits.PENH = 0;
 	while(1){
 //		blink_led(5);
-/*		IOCON2bits.PENL = 1;
+		IOCON2bits.PENL = 1;
 		IOCON3bits.PENH = 1;	
 		__delay_us(11);
 		IOCON2bits.PENL = 0;		
@@ -94,7 +94,7 @@ int main(void){
 		IOCON3bits.PENL = 0;
 		__delay_us(11);
 
-		int i;
+		/*int i;
 		for(i=0;i<5;i++){
 			IOCON1bits.PENL = 0;
 			IOCON1bits.PENH = 0;

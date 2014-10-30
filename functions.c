@@ -64,10 +64,9 @@ void init_pwm(void){
                                                configured for a period of 1.25us.
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
-    PDC1 = 24040;
-	SDC1 = 24040;                                           
-    //PDC1 = 12000;					   			/* 50% Duty cycle for PWM1H */ 
-	//SDC1 = 12000;								/* 50% Duty cycle for PWM1L */
+                                           
+    PDC1 = 0;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC1 = 0;								/* 50% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 2				*/
 	PWMCON2bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -79,11 +78,10 @@ void init_pwm(void){
     IOCON2bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
     IOCON2bits.PMOD = 0;   					/* Select complimentary Output PWM mode */
               
-	PWMCON2bits.DTC = 0;					/* Negaive Deadtime */
+	PWMCON2bits.DTC = 2;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
                                                center-aligned mode) */
 	
-	DTR2 = 2730;							//Dead Time Register
     PHASE2 = 24040;             			
 											/* In Center-aligned mode the effective period of 
                                                the PWM signal is twice of the value in the 
@@ -101,10 +99,9 @@ void init_pwm(void){
                                                configured for a period of 1.25us.
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
-    PDC2 = 24040;
-	SDC2 = 24040;                                  
-    //PDC2 = 12000;					   			/* 50% Duty cycle for PWM1H */ 
-	//SDC2 = 12000;								/* 50% Duty cycle for PWM1L */
+                                 
+    PDC2 = 0;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC2 = 0;								/* 50% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 3				*/
 	PWMCON3bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -120,7 +117,7 @@ void init_pwm(void){
 											  /* Select Independent timebase mode (required for
                                                center-aligned mode) */
 	
-    PHASE3 = 1202;             			
+    PHASE3 = 24040;             			
 											/* In Center-aligned mode the effective period of 
                                                the PWM signal is twice of the value in the 
                                                PHASEx register. So to obtain signal of 400kHz
@@ -129,7 +126,7 @@ void init_pwm(void){
                                                PHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
 
-    SPHASE3 = 1202;             			
+    SPHASE3 = 24040;             			
 												/* In Center-aligned mode the effective period of 
                                                the PWM signal is twice of the value in the 
                                                SPHASEx register. So to obtain signal of 400kHz
@@ -138,8 +135,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                                
-    PDC3 = 667;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC3 = 667;								/* 50% Duty cycle for PWM1L */
+    PDC3 = 0;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC3 = 0;								/* 50% Duty cycle for PWM1L */
     
 
 
