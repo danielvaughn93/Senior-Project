@@ -26,15 +26,27 @@ subfolder_lkr=
 [FILE_SUBFOLDERS]
 file_000=.
 file_001=.
+file_002=.
+file_003=.
+file_004=.
 [GENERATED_FILES]
 file_000=no
 file_001=no
+file_002=no
+file_003=no
+file_004=no
 [OTHER_FILES]
 file_000=no
 file_001=no
+file_002=no
+file_003=no
+file_004=no
 [FILE_INFO]
 file_000=main.c
-file_001=C:\Program Files (x86)\Microchip\xc16\v1.22\support\dsPIC33F\h\p33FJ16GS502.h
+file_001=functions.c
+file_002=enSecOsc.s
+file_003=C:\Program Files (x86)\Microchip\xc16\v1.22\support\dsPIC33F\h\p33FJ16GS502.h
+file_004=functions.h
 [SUITE_INFO]
 suite_guid={9BCCB495-CD65-480A-BA76-63D8E78B117F}
 suite_state=
