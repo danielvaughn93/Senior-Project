@@ -41,7 +41,7 @@ void init_pwm(void){
 	PWMCON1bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON1bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON1bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON1bits.PMOD = 0;   					/* Select Complimentary Output PWM mode */
+    IOCON1bits.PMOD = 3;   					/* Select Output PWM mode */
               
 	PWMCON1bits.DTC = 3;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -65,8 +65,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                            
-    PDC1 = 0;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC1 = 0;								/* 50% Duty cycle for PWM1L */
+    PDC1 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC1 = 24020;								/* 50% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 2				*/
 	PWMCON2bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -76,7 +76,7 @@ void init_pwm(void){
 	PWMCON2bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON2bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON2bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON2bits.PMOD = 0;   					/* Select complimentary Output PWM mode */
+    IOCON2bits.PMOD = 3;   					/* Select complimentary Output PWM mode */
               
 	PWMCON2bits.DTC = 2;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -100,8 +100,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                  
-    PDC2 = 0;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC2 = 0;								/* 50% Duty cycle for PWM1L */
+    PDC2 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC2 = 24020;								/* 50% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 3				*/
 	PWMCON3bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -111,7 +111,7 @@ void init_pwm(void){
 	PWMCON3bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON3bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON3bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON3bits.PMOD = 0;   					/* Select complimentary Output PWM mode */
+    IOCON3bits.PMOD = 3;   					/* Select complimentary Output PWM mode */
               
 	PWMCON3bits.DTC = 2;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -135,8 +135,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                                
-    PDC3 = 0;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC3 = 0;								/* 50% Duty cycle for PWM1L */
+    PDC3 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
+	SDC3 = 24020;								/* 50% Duty cycle for PWM1L */
     
 
 
@@ -193,10 +193,14 @@ void init_timer1( void )
 }
 
 void init_comp(void){
-
-
+	PMD3bits.CMPMD=0;
+	PMD7bits.CMP1MD=0;
 }
 
 void cyle_pwm(void){
+
+}
+
+void initdispay(void){
 
 }

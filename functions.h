@@ -17,3 +17,4 @@ void dutycycle_fluc(void);
 void init_timer1( void );
 void init_comp(void);
 void cycle_pwm(void);
+void initdisplay(void);

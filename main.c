@@ -40,7 +40,7 @@ void __attribute__((interrupt,no_auto_psv)) _T1Interrupt( void )
 
  //Main function
 int main(void){
-	TRISA = 0x0000; //Set PortA to output
+	TRISA = 0x0001; //Set Porta[0] to input
 	TRISB = 0x0000; //Set PortB to output
 	blink_led(5);
 
@@ -73,36 +73,28 @@ int main(void){
 	IOCON2bits.PENH = 0;
 	IOCON3bits.PENL = 0;
 	IOCON3bits.PENH = 0;
+	__delay_us(100);
 	while(1){
-//		blink_led(5);
+	//	blink_led(5);
+		//IOCON1bits.PENH = 0;
 		IOCON2bits.PENL = 1;
-		IOCON3bits.PENH = 1;	
-		__delay_us(11);
+		//IOCON3bits.PENH = 1;	
+		__delay_us(166);
 		IOCON2bits.PENL = 0;		
-		IOCON1bits.PENL = 1;
-		__delay_us(11);
-		IOCON3bits.PENH = 0;		
+		//IOCON1bits.PENL = 1;
+		__delay_us(166);
+		//IOCON3bits.PENH = 0;		
 		IOCON2bits.PENH = 1;
-		__delay_us(11);
-		IOCON3bits.PENL = 1;		
-		IOCON1bits.PENL = 0;
-		__delay_us(11);
+		__delay_us(166);
+		//IOCON3bits.PENL = 1;		
+		//IOCON1bits.PENL = 0;
+		__delay_us(166);
 		IOCON2bits.PENH = 0;		
-		IOCON1bits.PENH = 1;
-		__delay_us(11);
+		//IOCON1bits.PENH = 1;
+		__delay_us(166);
 		IOCON2bits.PENL = 1;		
-		IOCON3bits.PENL = 0;
-		__delay_us(11);
-
-		/*int i;
-		for(i=0;i<5;i++){
-			IOCON1bits.PENL = 0;
-			IOCON1bits.PENH = 0;
-			 __delay_ms(2000); // wait 2000 ms
-			IOCON1bits.PENL = 1;
-			IOCON1bits.PENH = 1;			
-		}*/
-
+		//IOCON3bits.PENL = 0;
+		__delay_us(166);
 	}
 
 }
