@@ -179,7 +179,6 @@ void init_adc(void){
 }
 void init_timer1( void )
 {
-
     T1CON = 0;              // Timer reset
  	IFS0bits.T1IF = 0;      // Reset Timer1 interrupt flag
 	IPC0bits.T1IP = 4;      // Timer1 Interrupt priority level=4

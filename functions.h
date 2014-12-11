@@ -10,6 +10,7 @@
 #include <libpic30.h>
 
 void blink_led(int numblinks);
+
 void init_pwm(void);
 void init_adc(void);
 void start_PWM(void);
