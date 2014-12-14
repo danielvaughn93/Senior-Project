@@ -4,31 +4,21 @@
 
 
 #include "functions.h"
-
+#include "spi.h"
+#include "ra8875.h"
 
 
 /* ISR ROUTINE FOR THE TIMER1 INTERRUPT */
-int Count;
-
-void __attribute__((interrupt,no_auto_psv)) _T1Interrupt( void )
+/*void __attribute__((interrupt,no_auto_psv)) _T1Interrupt( void )
 {
 	
 	
 
-    IFS0bits.T1IF = 0;
-    T1CONbits.TON = 0;
-   	Count++;
-	if(Count == 5)
-	{
-		    Count		   = 0;  
-			blink_led(3);		    
-	}
 
-    TMR1          = 0;
 	T1CONbits.TON = 1;
 	// reset Timer 1 interrupt flag 
  	
-}
+}*/
 
 
 //Select internal FRC at POR
@@ -41,9 +31,53 @@ void __attribute__((interrupt,no_auto_psv)) _T1Interrupt( void )
 
  //Main function
 int main(void){
-	TRISA = 0x0001; //Set Porta[0] to input
-	TRISB = 0x0000; //Set PortB to output
+
+	int i;
+	unsigned int regval = 0;
+
+
+	init_timer1();
+	enableInterrupts();
+	initInterrupts();
+
+	TRISA = 0x0002; //Set Porta[1] to input
+	TRISB = 0b0000000000010000; //Set PortB to output, except RB4
 	blink_led(5);
+
+/*
+	spi_init();
+
+	while (1)
+	{
+		spi_write(0b11111110);
+	}
+*/		
+
+//SCREEN CODE!////
+	_RA0 = 0; 	//error LED off
+	_RB3 = 1;	//start with SS1 high, RA8875 disabled as slave
+	spi_init();	//set up the SPI1 module on the DSPIC33
+
+	//check to see if we can communicate with the RA8875
+	while (1)
+	{	
+		regval = read_register(0);	
+		if (regval != 0x75)	//something's wrong, we can't read from the RA8875
+			_RA0 = 1;	//light up RA8875 communication error LED
+		else if (regval == 0x75)
+		{
+			break;
+		}
+	}
+
+	setup_screen();		//RA8875 is on, initialize everything
+
+	set_background(BLUE);
+
+	display_text("We are the music makers, and we are the dreamers of dreams.", 58, 100, 100, TEXT_SIZE_SMALL, WHITE);
+
+
+//END SCREEN CODE!
 
  /* Configure Oscillator to operate the device at 40Mhz
 	   Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
@@ -66,7 +100,6 @@ int main(void){
 	
 	while(ACLKCONbits.APLLCK != 1);			/* Wait for Auxiliary PLL to Lock */
 
-	init_timer1();
 	init_pwm();
 	IOCON1bits.PENL = 0;
 	IOCON1bits.PENH = 0;
