@@ -3,8 +3,7 @@
 //
 //
 
-volatile unsigned int spi_write(unsigned int data)
-{
+volatile unsigned int spi_write(unsigned int data){
 	SPI1BUF = data;	//transmit data on SPI
 	while (SPI1STATbits.SPIRBF == 0);	//wait for transmit to finish
 	return SPI1BUF;	//return whatever was sent back to us

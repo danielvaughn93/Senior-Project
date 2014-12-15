@@ -7,20 +7,6 @@
 #include "spi.h"
 #include "ra8875.h"
 
-
-/* ISR ROUTINE FOR THE TIMER1 INTERRUPT */
-/*void __attribute__((interrupt,no_auto_psv)) _T1Interrupt( void )
-{
-	
-	
-
-
-	T1CONbits.TON = 1;
-	// reset Timer 1 interrupt flag 
- 	
-}*/
-
-
 //Select internal FRC at POR
  _FOSCSEL(FNOSC_FRC);
  //Enable clock switching
@@ -31,27 +17,18 @@
 
  //Main function
 int main(void){
-
-	int i;
+	int SLT[360];
 	unsigned int regval = 0;
+	float angle;
+	int i;
+	for(i=0;i<360;i++){
+		angle = ((float)i);
+		SLT[i]=nearestint((100+99*sin(angle*(PI/180))));
+	}
 
-
-	init_timer1();
-	enableInterrupts();
-	initInterrupts();
-
-	TRISA = 0x0002; //Set Porta[1] to input
+	TRISA = 0x0004; //Set Porta[2] to input
 	TRISB = 0b0000000000010000; //Set PortB to output, except RB4
 	blink_led(5);
-
-/*
-	spi_init();
-
-	while (1)
-	{
-		spi_write(0b11111110);
-	}
-*/		
 
 //SCREEN CODE!////
 	_RA0 = 0; 	//error LED off
@@ -74,10 +51,10 @@ int main(void){
 
 	set_background(BLUE);
 
-	display_text("We are the music makers, and we are the dreamers of dreams.", 58, 100, 100, TEXT_SIZE_SMALL, WHITE);
-
+	display_text("I just want these goddamn interrupts to work", 44, 100, 100, TEXT_SIZE_SMALL, WHITE);
 
 //END SCREEN CODE!
+
 
  /* Configure Oscillator to operate the device at 40Mhz
 	   Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
@@ -100,6 +77,13 @@ int main(void){
 	
 	while(ACLKCONbits.APLLCK != 1);			/* Wait for Auxiliary PLL to Lock */
 
+	init_timer1();
+	init_timer2();
+	enableInterrupts();
+	initInterrupts();
+
+	while(1);
+
 	init_pwm();
 	IOCON1bits.PENL = 0;
 	IOCON1bits.PENH = 0;
@@ -108,6 +92,7 @@ int main(void){
 	IOCON3bits.PENL = 0;
 	IOCON3bits.PENH = 0;
 	__delay_us(100);
+
 	while(1){
 	//	blink_led(5);
 		//IOCON1bits.PENH = 0;

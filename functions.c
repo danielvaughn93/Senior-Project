@@ -24,6 +24,15 @@ void blink_led(int numblinks){
          __delay_ms(100); // wait 100 ms
      }
 }
+void blink_led2(int numblinks){
+    int i; 
+      for(i=0;i<numblinks;i++) {
+         LATB = 0x8000; // turn LED on
+         __delay_ms(100); // wait 100 ms
+         LATB = 0x0000; // turn LED OFF
+         __delay_ms(100); // wait 100 ms
+     }
+}
 
 void init_pwm(void){
     PTCONbits.PTEN = 0;						/* Disable PWM */
@@ -177,23 +186,40 @@ void init_adc(void){
 	ADCONbits.ADCS = 0;
 	ADCONbits.ADON = 1;
 }
-void init_timer1( void ){
+void init_timer1(void){
 
     T1CON = 0;              // Timer reset
 //	IFS0bits.T1IF = 0;      // Reset Timer1 interrupt flag
 //	IPC0bits.T1IP = 4;      // Timer1 Interrupt priority level=4
  //	IEC0bits.T1IE = 1;      // Enable Timer1 interrupt
- 	  	
+ 	TMR1 = 0x0000;		
 	PR1 = 0x8000;           // Timer1 period register = 32768
-	T1CONbits.TCS = 1;      // Timer1 Clock= External
-    enSecOsc();             // Enable Secondary Osc
-	T1CONbits.TON = 0;      // Enable Timer1 and start the counter
+	T1CONbits.TCS = 0;      // Timer1 Clock= internal
+  	T1CONbits.TON = 1;      // Enable Timer1 and start the counter
 
+}
+void init_timer2(void){
+    T2CON = 0;              // Timer reset
+//	IFS0bits.T1IF = 0;      // Reset Timer1 interrupt flag
+//	IPC0bits.T1IP = 4;      // Timer2 Interrupt priority level=4
+ //	IEC0bits.T1IE = 1;      // Enable Timer2 interrupt
+ 	TMR2 = 0x0000;		
+	PR2 = 0x8000;           // Timer2 period register = 32768
+	T2CONbits.TCS = 0;      // Timer2 Clock= internal
+  	T2CONbits.TON = 1;      // Enable Timer2 and start the counter
 }
 
 void init_comp(void){
 	PMD3bits.CMPMD=0;
 	PMD7bits.CMP1MD=0;
+
+	CMPCON1bits.CMPSIDL=0;
+	CMPCON1bits.INSEL=2;
+	CMPCON1bits.EXTREF=0;
+	CMPCON1bits.CMPPOL=0;
+	CMPCON1bits.RANGE=1;
+	CMPCON1bits.DACOE=0;
+	CMPCON1bits.CMPON=1;
 }
 
 void cyle_pwm(void){
@@ -214,31 +240,49 @@ void disableInterrupts(void){
 }
 
 void initInterrupts(void){
-	/* Interrupt nesting enabled here */
+	// Interrupt nesting enabled here
 	INTCON1bits.NSTDIS = 0;
-	/* Set Timer3 interrupt priority to 6 (level 7 is highest) */
+	
+	// Set Timer3 interrupt priority to 6 (level 7 is highest) 
 //	IPC2bits.T3IP = 6;
-	/* Set Timer2 interrupt priority to 5 */
-//	IPC1bits.T2IP = 5;
-	/* Set Change Notice interrupt priority to 4 */
-	IPC4bits.CNIP = 4;
-	/* Set Timer1 interrupt priority to 2 */
-	IPC0bits.T1IP = 2;
-	/* Reset Timer1 interrupt flag */
+	// Set Timer2 interrupt priority to 6 
+	IPC1bits.T2IP = 6;
+	// Set Change Notice interrupt priority to 4
+//	IPC4bits.CNIP = 4;
+	// Set Timer1 interrupt priority to 6 
+	IPC0bits.T1IP = 6;
+	//Set Analog Comparator interrupt priority to 6
+	IPC4bits.AC1IP = 6;
+	// Reset Timer1 interrupt flag 
 	IFS0bits.T1IF = 0;
-	/* Reset Timer2 interrupt flag */
-//	IFS0bits.T2IF = 0;
-	/* Reset Timer3 interrupt flag */
+	// Reset Timer2 interrupt flag 
+	IFS0bits.T2IF = 0;
+	// Reset Timer3 interrupt flag 
 //	IFS0bits.T3IF = 0;
-	/* Enable CN interrupts */
+	// Reset Comparator interrupt flag
+	IFS1bits.AC1IF=0;
+	// Enable CN interrupts
 //	IEC1bits.CNIE = 1;
-	/* Enable Timer1 interrupt */
+	// Enable Timer1 interrupt 
 	IEC0bits.T1IE = 1;
 	/* Enable Timer2 interrupt (PWM time base) */
-//	IEC0bits.T2IE = 1;
-	/* Enable Timer3 interrupt */
+	IEC0bits.T2IE = 1;
+	// Enable Timer3 interrupt 
 //	IEC0bits.T3IE = 1;
+	//Enable Analog comparator 1 Interrupt
+	IEC1bits.AC1IE;
 	/* Reset change notice interrupt flag */
 //	IFS1bits.CNIF = 0;
+	
 	return;
+}
+int nearestint(float i){
+	int rounded;
+	if(i<0){
+		rounded = ((int)(i-0.5));
+	}
+	else{
+		rounded = ((int)(i+0.5));
+	}
+	return rounded;
 }
