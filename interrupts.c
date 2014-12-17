@@ -1,16 +1,51 @@
+//Daniel Vaughn
+//interrupts.c
+// File to write the Interrupt Serive Routines(ISR)
+//for the dsPIC33fj16GS502
+//
+//Developed at the University of Maine
+//Fall 2014
+//
+//This file contains the routine to be executed by the interrupts,
+//these interrupts are to be used with the dsPIC33fj16GS502
+
 #include "interrupts.h"
 
-static int Count=0;
-static int Count2=0;
+extern int SLT[360];
+extern int per;
+static int Count;
+static int Count2;
+static int del=1000;
+static int ind=0;
+static int an2;
+static int an3;
+static int an4;
+static int an5;
+
 // ISR ROUTINE FOR THE TIMER1 INTERRUPT 
 void __attribute__((__interrupt__)) _T1Interrupt(void){
 	/* Insert ISR Code Here*/
     T1CONbits.TON = 0;
    	Count++;
-//	display_text("THAT", 4, 122, 150, TEXT_SIZE_NORMAL, WHITE);
-	if(Count == 1000){
+	if(Count >= del){
 		    Count = 0;  
-			blink_led(3);		    
+			blink_led(1);
+
+			//Sine wave generation of first sine wave
+			PDC1=24040*SLT[ind];
+			
+			//Sine wave generation of second sine wave which is 120 degrees out of phase with the first
+			PDC2=24040*SLT[(ind+120)%360];
+
+			//Sine wave generation of third sine wave which is 120 degrees out of phase with the second
+			PDC3=24040*SLT[(ind+240)%360];
+			if(ind==360){
+				ind=0;
+			}
+			else{
+				ind++;
+			}
+
 	}
 
     TMR1 = 0;
@@ -19,15 +54,15 @@ void __attribute__((__interrupt__)) _T1Interrupt(void){
 	//Turn Timer Back on
 	T1CONbits.TON = 1;
 }
+
 // ISR ROUTINE FOR THE TIMER2 INTERRUPT
 void __attribute__((__interrupt__)) _T2Interrupt(void){
 	/* Insert ISR Code Here*/
     T2CONbits.TON = 0;
    	Count2++;
-//	display_text("THIS", 4, 100, 150, TEXT_SIZE_NORMAL, WHITE);
 	if(Count2 == 5500){
 		    Count2 = 0;  
-			blink_led2(3);		    
+			blink_led2(1);		    
 	}
 
     TMR2 = 0;
@@ -37,16 +72,34 @@ void __attribute__((__interrupt__)) _T2Interrupt(void){
 	T2CONbits.TON = 1;
 }
 
+/*TIMER 3 IS UNUSED SO FAR IN THE CODE
+
 // ISR ROUTINE FOR THE TIMER3 INTERRUPT
-void __attribute__((__interrupt__)) _T3Interrupt(void){
-	/* Insert ISR Code Here*/
-	/* Clear Timer3 interrupt */
+void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void){
 	IFS0bits.T3IF = 0;
 }
 
-// ISR ROUTINE FOR THE CN INTERRUPT
-void __attribute__((__interrupt__)) _CNInterrupt(void){
-	/* Insert ISR Code Here*/
-	/* Clear CN interrupt */
-	IFS1bits.CNIF = 0;
+*/
+
+//ISR ROUTINE FOR THE ADC PAIR 1 INTERRUPT
+void __attribute__((__interrupt__)) _ADCP1Interrupt (void){
+	T2CONbits.TON = 0; //Timer2 is the trigger, turn it off while interrupt runs
+
+	an2 = ADCBUF2; // Read AN2 conversion result
+	an3 = ADCBUF3; // Read AN3 conversion result
+
+
+    T2CONbits.TON = 1;	//Turn timer2 back on	
+	IFS6bits.ADCP1IF = 0;  //Clear ADC Pair 1 Interrupt Flag
+}
+
+//ISR ROUTINE FOR THE ADC PAIR 2 INTERRUPT
+void __attribute__((__interrupt__)) _ADCP2Interrupt (void){
+	T2CONbits.TON = 0; //Timer2 is trigger, turn it off while interrupt runs
+
+	an4 = ADCBUF0; // Read AN0 conversion result
+	an5 = ADCBUF1; // Read AN1 conversion result
+
+    T2CONbits.TON = 1;	//Turn timer2 back on
+	IFS6bits.ADCP0IF = 0; // Clear ADC Pair 2 Interrupt Flag
 }

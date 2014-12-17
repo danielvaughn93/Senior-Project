@@ -1,7 +1,8 @@
+//Daniel Vaughn
 //spi.h
 //dsPIC33fj16GS502
 //
-//
+//This file contains functions that interact over SPI lines
 
 volatile unsigned int spi_write(unsigned int data){
 	SPI1BUF = data;	//transmit data on SPI
@@ -9,8 +10,7 @@ volatile unsigned int spi_write(unsigned int data){
 	return SPI1BUF;	//return whatever was sent back to us
 }
 
-void spi_init(void)
-{
+void spi_init(void){
 	//unlock registers so that we can map SDI, SDO, SCK, and SS to RP pins
 	OSCCON = OSCCON & 0b1111111101000110;
 	OSCCON = OSCCON & 0b1111111101010111;

@@ -8,6 +8,8 @@
 //by Michael F. Cloutier
 //developed at the University Of Maine
 //Spring 2014
+//Modified by Daniel Vaughn
+//Fall 2014
 //
 //contains all RA8875 functions for PIC24, 
 //specifically for use with electronic lock system

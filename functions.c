@@ -1,6 +1,17 @@
-#include "functions.h"
-extern void enSecOsc();
+//Daniel Vaughn
+//functions.c
+//
+//Developed at University of Maine
+//Fall 2014
+//
+//This file contains the implementation of the functions used to initialize
+// the modules, such as the Analog to Digital Converter(ADC), Timer1, and Timer2.
+//It also contains various stages of functions from the development process/ programs
+// that were used to test different parts of the code throughout the development.
 
+#include "functions.h"
+
+//Function to test if we could adjuct the PWM duty cycle on the fly
 void dutycycle_fluc(void){
 		int dc=0;
 		while(dc<1224){
@@ -14,7 +25,8 @@ void dutycycle_fluc(void){
          	__delay_ms(100); // wait 100 ms
 		}
 }
-
+//Function primarily used in testing interrupt code.
+//Takes an int that is the number of times for the led to blink.
 void blink_led(int numblinks){
     int i; 
       for(i=0;i<numblinks;i++) {
@@ -24,6 +36,8 @@ void blink_led(int numblinks){
          __delay_ms(100); // wait 100 ms
      }
 }
+//Function primarily used in testing interrupt code.
+//Takes an int that is the number of times for the led to blink.
 void blink_led2(int numblinks){
     int i; 
       for(i=0;i<numblinks;i++) {
@@ -34,6 +48,7 @@ void blink_led2(int numblinks){
      }
 }
 
+//This function initializes each of the 3 PWM modules. 
 void init_pwm(void){
     PTCONbits.PTEN = 0;						/* Disable PWM */
 
@@ -50,7 +65,11 @@ void init_pwm(void){
 	PWMCON1bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON1bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON1bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON1bits.PMOD = 3;   					/* Select Output PWM mode */
+    IOCON1bits.PMOD = 0;   					/* Select Output PWM mode
+												11 = PWM I/O pin pair is in the True Independent Output mode
+												10 = PWM I/O pin pair is in the Push-Pull Output mode
+												01 = PWM I/O pin pair is in the Redundant Output mode
+												00 = PWM I/O pin pair is in the Complementary Output mode */
               
 	PWMCON1bits.DTC = 3;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -74,8 +93,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                            
-    PDC1 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC1 = 24020;								/* 50% Duty cycle for PWM1L */
+    PDC1 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
+	SDC1 = 24040;								/* 100% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 2				*/
 	PWMCON2bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -85,7 +104,11 @@ void init_pwm(void){
 	PWMCON2bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON2bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON2bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON2bits.PMOD = 3;   					/* Select complimentary Output PWM mode */
+    IOCON2bits.PMOD = 0;   					/* Select Output PWM mode
+												11 = PWM I/O pin pair is in the True Independent Output mode
+												10 = PWM I/O pin pair is in the Push-Pull Output mode
+												01 = PWM I/O pin pair is in the Redundant Output mode
+												00 = PWM I/O pin pair is in the Complementary Output mode */
               
 	PWMCON2bits.DTC = 2;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -109,8 +132,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                  
-    PDC2 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC2 = 24020;								/* 50% Duty cycle for PWM1L */
+    PDC2 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
+	SDC2 = 24040;								/* 100% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 3				*/
 	PWMCON3bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -120,7 +143,11 @@ void init_pwm(void){
 	PWMCON3bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON3bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
     IOCON3bits.PENL = 1;   					/* PWM1L is controlled by PWM module */
-    IOCON3bits.PMOD = 3;   					/* Select complimentary Output PWM mode */
+    IOCON3bits.PMOD = 0;   					/* Select Output PWM mode
+												11 = PWM I/O pin pair is in the True Independent Output mode
+												10 = PWM I/O pin pair is in the Push-Pull Output mode
+												01 = PWM I/O pin pair is in the Redundant Output mode
+												00 = PWM I/O pin pair is in the Complementary Output mode */
               
 	PWMCON3bits.DTC = 2;					/* Disable Deadtime */
 											  /* Select Independent timebase mode (required for
@@ -144,8 +171,8 @@ void init_pwm(void){
                                                SPHASE1 = ((1.25us) / 1.04ns) = 1202. So effective
                                                period is 2.5us. */
                                                
-    PDC3 = 24020;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC3 = 24020;								/* 50% Duty cycle for PWM1L */
+    PDC3 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
+	SDC3 = 24040;								/* 100% Duty cycle for PWM1L */
     
 
 
@@ -155,37 +182,42 @@ void init_pwm(void){
 
 }
 
-void start_PWM(void){
 
-    PHASE1 = 1920;                          /* PWM1H, PHASEx = ((1 / 500kHz) / 1.04ns) = 1923, where 500kHz 
-											 is the desired switching frequency and 1.04ns is PWM resolution. */
-
-    SPHASE1 = 3840;                         /* PWM1L, SPHASEx = ((1 / 250kHz) / 1.04ns) = 3846, where 250kHz 
-											 is the desired switching frequency and 1.04ns is PWM resolution. */
-
-	PWMCON1bits.ITB = 1;					/* Use Phasex and SPHASEx registers for Independent time base */
-	PWMCON1bits.DTC = 2;					/* Disable Deadtime */
-
-   
-    IOCON1bits.PENH = 1;      				/* PWM1H is controlled by PWM module */ 
-    IOCON1bits.PENL = 1;      				/* PWM1L is controlled by PWM module */
-    IOCON1bits.PMOD = 0;      				/* Select True Independent Output PWM mode */
-
-    PDC1 = 960;					   			/* 50% Duty cycle for PWM1H */ 
-	SDC1 = 1920;							/* 50% Duty cycle for PWM1L */
-    
-    PTCONbits.PTEN       = 1;      			/* Enable the PWM Module */
-}
-
+//This function initiallizes the ADC. The ADC will be used to take inupt
+//From the Hall effect sensor and determine whether the wheel is spinning
+//at the correct speed.
 void init_adc(void){
-	ADCONbits.ADON = 0;
-	ADCONbits.ADSIDL = 0;
-	ADCONbits.SLOWCLK = 0;
-	ADCONbits.FORM = 0;
+	ADCONbits.ADON=0;	//turn off ADC module
 
-	ADCONbits.ADCS = 0;
-	ADCONbits.ADON = 1;
+	ADCONbits.FORM = 1; // Output in Integer Format
+	ADCONbits.EIE = 0; // Enable Early Interrupt
+	ADCONbits.ORDER = 0; // Normal Order of Conversion
+	ADCONbits.SEQSAMP = 0; // Simultaneous Sampling 
+	ADCONbits.ASYNCSAMP = 1; // Asynchronous Sampling
+	ADCONbits.SLOWCLK = 0; // High Frequency Clock Input
+	ADCONbits.ADCS = 5; // Clock Divider Selection
+
+	ADCPC0bits.TRGSRC1=0b11111; // Timer 2 Period match trigger Selected
+	ADCPC1bits.TRGSRC2=0b11111; // Timer 2 Period Match trigger Selected
+
+	ADPCFGbits.PCFG3 = 0; // AN3 is configured as analog input
+	ADPCFGbits.PCFG4 = 0; // AN4 is configured as analog input
+	ADPCFGbits.PCFG5 = 0; // AN5 is configured as analog input
+
+	IPC28bits.ADCP2IP = 0x04; // Set ADC Pair 2 Interrupt Priority (Level 4)
+	IFS7bits.ADCP2IF = 0; // Clear ADC Pair 2 Interrupt Flag
+	IEC7bits.ADCP2IE = 1; // Enable ADC Pair 2 Interrupt
+
+	IPC27bits.ADCP1IP = 0x04; // Set ADC Pair 1 Interrupt Priority (Level 4)
+	IFS6bits.ADCP1IF = 0; // Clear ADC Pair 1 Interrupt Flag
+	IEC6bits.ADCP1IE = 1; // Enable ADC Pair 1 Interrupt
+
+	ADCONbits.ADON = 1; // Enable ADC Module
+
 }
+//This function initializes Timer1. This timer is going to primarily
+// be used to adjust the frequecy of the PWM emulated sine wave, and
+// Emulate the sine wave in the Timer1 Interrupts
 void init_timer1(void){
 
     T1CON = 0;              // Timer reset
@@ -195,9 +227,18 @@ void init_timer1(void){
  	TMR1 = 0x0000;		
 	PR1 = 0x8000;           // Timer1 period register = 32768
 	T1CONbits.TCS = 0;      // Timer1 Clock= internal
-  	T1CONbits.TON = 1;      // Enable Timer1 and start the counter
+
+//Interrupt setup
+	IPC0bits.T1IP = 6;		// Set Timer1 interrupt priority to 6 
+	IFS0bits.T1IF = 0;		// Reset Timer1 interrupt flag 
+	IEC0bits.T1IE = 1;  	// Enable Timer1 interrupt 
+
+	T1CONbits.TON = 1;      // Enable Timer1 and start the counter
 
 }
+
+//This function initializes Timer2. This timer is going to be
+//used to trigger the ADC interrupts
 void init_timer2(void){
     T2CON = 0;              // Timer reset
 //	IFS0bits.T1IF = 0;      // Reset Timer1 interrupt flag
@@ -206,9 +247,17 @@ void init_timer2(void){
  	TMR2 = 0x0000;		
 	PR2 = 0x8000;           // Timer2 period register = 32768
 	T2CONbits.TCS = 0;      // Timer2 Clock= internal
-  	T2CONbits.TON = 1;      // Enable Timer2 and start the counter
+
+//Interrupt Stuff
+	IPC1bits.T2IP = 6;		// Set Timer2 interrupt priority to 6 
+	IFS0bits.T2IF = 0;		// Reset Timer2 interrupt flag 
+	IEC0bits.T2IE = 1;		// Enable Timer2 interrupt
+  
+	T2CONbits.TON = 1;      // Enable Timer2 and start the counter
 }
 
+
+//This function initiallizes the comparator module.
 void init_comp(void){
 	PMD3bits.CMPMD=0;
 	PMD7bits.CMP1MD=0;
@@ -222,24 +271,27 @@ void init_comp(void){
 	CMPCON1bits.CMPON=1;
 }
 
-void cyle_pwm(void){
-
-}
-
-void enableInterrupts(void){
+//Enables the use of interrupts
+void enable_interrupts(void){
 	/* Set CPU IPL to 0, enable level 1-7 interrupts */
 	/* No restoring of previous CPU IPL state performed here */
 	SRbits.IPL = 0;
 	return;
 }
-void disableInterrupts(void){
+
+//Disables all interrupts
+void disable_interrupts(void){
 	/* Set CPU IPL to 7, disable level 1-7 interrupts */
 	/* No saving of current CPU IPL setting performed here */
 	SRbits.IPL = 7;
 	return;
 }
 
-void initInterrupts(void){
+
+//This was the first way I was going to initialize all the interrupts in one place
+//Decided that it would be better to initialize them individually with the module 
+//that they would be associated with
+void init_interrupts(void){
 	// Interrupt nesting enabled here
 	INTCON1bits.NSTDIS = 0;
 	
@@ -271,11 +323,17 @@ void initInterrupts(void){
 //	IEC0bits.T3IE = 1;
 	//Enable Analog comparator 1 Interrupt
 	IEC1bits.AC1IE;
+	//Enable ADC Pair 0 Interrupt
+	ADCPC0bits.IRQEN1=1;
 	/* Reset change notice interrupt flag */
 //	IFS1bits.CNIF = 0;
 	
 	return;
 }
+
+//This function rounds to the nearest int. I tried to use round and rint,
+//But it was giving me some weird linker errors, even though I had included math.h
+
 int nearestint(float i){
 	int rounded;
 	if(i<0){
@@ -285,4 +343,32 @@ int nearestint(float i){
 		rounded = ((int)(i+0.5));
 	}
 	return rounded;
+}
+
+//This function was an attempt to use square pwm waves that were being turned on and off
+// in a way that would control the H-bridge to turn the motor.
+void square_pwm(int freq){
+		int del=0;
+		if(freq<1000){		//Frequency too low
+			freq=1000;
+		}
+		del=freq/6;
+		IOCON2bits.PENL = 1;
+		IOCON3bits.PENH = 1;	
+		__delay_us(del);
+		IOCON2bits.PENL = 0;		
+		IOCON1bits.PENL = 1;
+		__delay_us(del);
+		IOCON3bits.PENH = 0;		
+		IOCON2bits.PENH = 1;
+		__delay_us(del);
+		IOCON3bits.PENL = 1;		
+		IOCON1bits.PENL = 0;
+		__delay_us(del);
+		IOCON2bits.PENH = 0;		
+		IOCON1bits.PENH = 1;
+		__delay_us(del);
+		IOCON2bits.PENL = 1;		
+		IOCON3bits.PENL = 0;
+		__delay_us(del);
 }
