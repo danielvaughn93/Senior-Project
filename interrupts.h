@@ -8,7 +8,8 @@
 //This file contains the declarations for the interrupts to 
 //be used with the dsPIC33fj16GS502
 
-
+#ifndef INTERRUPTS_H_
+#define INTERRUPTS_H_
 #include "functions.h"
 
 //Declaration for the Timer 1 Interrupt
@@ -22,3 +23,4 @@ void __attribute__((__interrupt__)) _ADCP0Interrupt (void);
 //Declaration for ADC pair 2 Interrupt
 void __attribute__((__interrupt__)) _ADCP2Interrupt (void);
 
+#endif

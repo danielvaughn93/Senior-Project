@@ -27,7 +27,7 @@ int main(void){
 	int i,test;
 	for(i=0;i<360;i++){
 		angle = ((float)i);
-		SLT[i]=nearestint(sin(angle*(PI/180)));
+		SLT[i]=nearestint(50+49*sin(angle*(PI/180)));
 	}
 
 	TRISA = 0x0004; //Set Porta[2] to input
@@ -36,7 +36,7 @@ int main(void){
 
 	unsigned int regval = 0;
 
-	_RA0 = 0; 	//error LED off
+/*	_RA0 = 0; 	//error LED off
 	_RB3 = 1;	//start with SS1 high, RA8875 disabled as slave
 	spi_init();	//set up the SPI1 module on the DSPIC33
 
@@ -54,7 +54,7 @@ int main(void){
 
 	setup_screen();		//RA8875 is on, initialize everything
 	set_background(BLUE);
-	test=10;
+	test=5;
 	while(test){
 		display_text("This is a test to show what the display is capable of", 54, 250, 100, TEXT_SIZE_SMALL, WHITE);
 		display_text("Test Number Printed here: ", 26, 100,200, TEXT_SIZE_SMALL,WHITE);
@@ -68,7 +68,7 @@ int main(void){
 	}	
 
 //END SCREEN CODE!
-
+*/
 
  /* Configure Oscillator to operate the device at 40Mhz
 	   Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
@@ -91,15 +91,13 @@ int main(void){
 	
 	while(ACLKCONbits.APLLCK != 1);			/* Wait for Auxiliary PLL to Lock */
 
-	init_timer1();
-	init_timer2();
-	init_adc();
-//	enable_interrupts();
-	init_interrupts();
-
+	//enable_interrupts();
+	//init_timer1();
+	//init_timer2();
+	//init_adc();
 	init_pwm();
 
-	int frq=1000;
+	int frq=10000;
 	IOCON1bits.PENL = 0;
 	IOCON1bits.PENH = 0;
 	IOCON2bits.PENL = 0;
@@ -109,6 +107,6 @@ int main(void){
 	__delay_us(100);
 
 	while(1){
-		//square_pwm(freq);	
+		square_pwm(frq);	
 	}
 }

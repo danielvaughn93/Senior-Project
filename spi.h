@@ -4,6 +4,9 @@
 //
 //This file contains functions that interact over SPI lines
 
+#ifndef SPI_H_
+#define SPI_H_
+
 volatile unsigned int spi_write(unsigned int data){
 	SPI1BUF = data;	//transmit data on SPI
 	while (SPI1STATbits.SPIRBF == 0);	//wait for transmit to finish
@@ -49,3 +52,5 @@ void spi_init(void){
 	SPI1STATbits.SPIROV = 0;	//clear SPIROV bit
 	SPI1STATbits.SPIEN = 1;		//enable SPI module, let's do this!!!
 }	
+
+#endif

@@ -11,6 +11,9 @@
 //It also contains various stages of functions from the development process/ programs
 // that were used to test different parts of the code throughout the development.
 
+#ifndef FUNCTIONS_H_
+#define FUNCTIONS_H_
+
 #include <p33FJ16GS502.h>
 #include <math.h>
 #include <stddef.h>
@@ -41,3 +44,5 @@ void disable_interrupts(void);
 void init_interrupts(void);
 int nearestint(float i);
 void square_pwm(int freq);
+
+#endif

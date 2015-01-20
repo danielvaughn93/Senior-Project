@@ -94,7 +94,7 @@ void init_pwm(void){
                                                period is 2.5us. */
                                            
     PDC1 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
-	SDC1 = 24040;								/* 100% Duty cycle for PWM1L */
+//	SDC1 = 24040;								/* 100% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 2				*/
 	PWMCON2bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -133,7 +133,7 @@ void init_pwm(void){
                                                period is 2.5us. */
                                  
     PDC2 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
-	SDC2 = 24040;								/* 100% Duty cycle for PWM1L */
+//	SDC2 = 24040;								/* 100% Duty cycle for PWM1L */
     
 /*									SETUP PWM MOD 3				*/
 	PWMCON3bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
@@ -172,7 +172,7 @@ void init_pwm(void){
                                                period is 2.5us. */
                                                
     PDC3 = 24040;					   			/* 100% Duty cycle for PWM1H */ 
-	SDC3 = 24040;								/* 100% Duty cycle for PWM1L */
+//	SDC3 = 24020;								/* 100% Duty cycle for PWM1L */
     
 
 
