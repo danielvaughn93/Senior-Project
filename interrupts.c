@@ -10,8 +10,7 @@
 //these interrupts are to be used with the dsPIC33fj16GS502
 
 #include "interrupts.h"
-
-extern int SLT[360];
+extern int SLT[180];
 extern int per;
 static int Count=0;
 static int Count2=0;
@@ -94,9 +93,15 @@ void __attribute__((__interrupt__, __auto_psv__)) _ADCP1Interrupt (void){
 void __attribute__((__interrupt__, __auto_psv__)) _ADCP2Interrupt (void){
 	T2CONbits.TON = 0; //Timer2 is trigger, turn it off while interrupt runs
 
-	an4 = ADCBUF0; // Read AN0 conversion result
-	an5 = ADCBUF1; // Read AN1 conversion result
+	an4 = ADCBUF0; // Read AN4 conversion result
+	an5 = ADCBUF1; // Read AN5 conversion result
 
+	if(an5<=449){
+			PTCONbits.PTEN = 0;
+	}
+	else{
+			PTCONbits.PTEN = 1;
+	}	
     T2CONbits.TON = 1;	//Turn timer2 back on
 	IFS6bits.ADCP0IF = 0; // Clear ADC Pair 2 Interrupt Flag
 }

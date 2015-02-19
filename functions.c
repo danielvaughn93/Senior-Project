@@ -11,10 +11,12 @@
 
 #include "functions.h"
 
+extern int SLT[180];
+
 //Function to test if we could adjuct the PWM duty cycle on the fly
 void dutycycle_fluc(void){
 		int dc=0;
-		while(dc<1224){
+		while(dc<24040){
 			PDC1 = dc;
 			SDC1 = dc;
 			PDC2 = dc;
@@ -22,7 +24,7 @@ void dutycycle_fluc(void){
 			PDC3 = dc;
 			SDC3 = dc;
 			dc++;
-         	__delay_ms(100); // wait 100 ms
+         	__delay_ms(10); // wait 100 ms
 		}
 }
 //Function primarily used in testing interrupt code.
@@ -60,7 +62,7 @@ void init_pwm(void){
 /*									SETUP PWM MOD 1				*/
 	PWMCON1bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
 	PWMCON1bits.MDCS = 0;					/* PDC/SDC register provides duty cycle for x PWM generator */
-	PWMCON1bits.CAM = 1;					/* Enable center-aligned mode */
+	PWMCON1bits.CAM = 0;					/* Enable center-aligned mode */
 	PWMCON1bits.XPRES = 0;					/* External pins do not affect PWM time base */
 	PWMCON1bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON1bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
@@ -71,10 +73,14 @@ void init_pwm(void){
 												01 = PWM I/O pin pair is in the Redundant Output mode
 												00 = PWM I/O pin pair is in the Complementary Output mode */
               
-	PWMCON1bits.DTC = 3;					/* Disable Deadtime */
-											  /* Select Independent timebase mode (required for
-                                               center-aligned mode) */
+	PWMCON1bits.DTC = 0;					// Deadtime Setting
+												//00 = Positive dead time actively applied for all output modes
+												//01 = Negative dead time actively applied for all output modes
+												//10 = Dead-time function is disabled
 	
+	DTR1 = 1000;								// Unsigned 14-Bit Dead-Time Value for PWM1 Dead-Time Unit bits							
+	ALTDTR1 = 1000;									
+
     PHASE1 = 24040;             			
 											/* In Center-aligned mode the effective period of 
                                                the PWM signal is twice of the value in the 
@@ -99,7 +105,7 @@ void init_pwm(void){
 /*									SETUP PWM MOD 2				*/
 	PWMCON2bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
 	PWMCON2bits.MDCS = 0;					/* PDC/SDC register provides duty cycle for x PWM generator */
-	PWMCON2bits.CAM = 1;					/* Enable center-aligned mode */
+	PWMCON2bits.CAM = 0;					/* Enable center-aligned mode */
 	PWMCON2bits.XPRES = 0;					/* External pins do not affect PWM time base */
 	PWMCON2bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON2bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
@@ -110,9 +116,13 @@ void init_pwm(void){
 												01 = PWM I/O pin pair is in the Redundant Output mode
 												00 = PWM I/O pin pair is in the Complementary Output mode */
               
-	PWMCON2bits.DTC = 2;					/* Disable Deadtime */
-											  /* Select Independent timebase mode (required for
-                                               center-aligned mode) */
+	PWMCON2bits.DTC = 0;					/* Disable Deadtime */
+												//00 = Positive dead time actively applied for all output modes
+												//01 = Negative dead time actively applied for all output modes
+												//10 = Dead-time function is disabled
+
+	DTR2 = 1000;								// Unsigned 14-Bit Dead-Time Value for PWM2 Dead-Time Unit bits							
+	ALTDTR2 = 1000;
 	
     PHASE2 = 24040;             			
 											/* In Center-aligned mode the effective period of 
@@ -138,7 +148,7 @@ void init_pwm(void){
 /*									SETUP PWM MOD 3				*/
 	PWMCON3bits.ITB = 1;					/* PHASEx/SPHASEx provides time base period for x PWM gen */
 	PWMCON3bits.MDCS = 0;					/* PDC/SDC register provides duty cycle for x PWM generator */
-	PWMCON3bits.CAM = 1;					/* Enable center-aligned mode */
+	PWMCON3bits.CAM = 0;					/* Enable center-aligned mode */
 	PWMCON3bits.XPRES = 0;					/* External pins do not affect PWM time base */
 	PWMCON3bits.IUE = 1;					/*Updates to the active MDC/PDCx/SDCx registers are immediate*/
     IOCON3bits.PENH = 1;   					/* PWM1H is controlled by PWM module */
@@ -149,9 +159,13 @@ void init_pwm(void){
 												01 = PWM I/O pin pair is in the Redundant Output mode
 												00 = PWM I/O pin pair is in the Complementary Output mode */
               
-	PWMCON3bits.DTC = 2;					/* Disable Deadtime */
-											  /* Select Independent timebase mode (required for
-                                               center-aligned mode) */
+	PWMCON3bits.DTC = 0;					/* Disable Deadtime */
+												//00 = Positive dead time actively applied for all output modes
+												//01 = Negative dead time actively applied for all output modes
+												//10 = Dead-time function is disabled
+
+	DTR3 = 1000;								// Unsigned 14-Bit Dead-Time Value for PWM3 Dead-Time Unit bits							
+	ALTDTR3 = 1000;
 	
     PHASE3 = 24040;             			
 											/* In Center-aligned mode the effective period of 
@@ -189,7 +203,7 @@ void init_pwm(void){
 void init_adc(void){
 	ADCONbits.ADON=0;	//turn off ADC module
 
-	ADCONbits.FORM = 1; // Output in Integer Format
+	ADCONbits.FORM = 0; // Output in Integer Format
 	ADCONbits.EIE = 0; // Enable Early Interrupt
 	ADCONbits.ORDER = 0; // Normal Order of Conversion
 	ADCONbits.SEQSAMP = 0; // Simultaneous Sampling 
@@ -262,13 +276,13 @@ void init_comp(void){
 	PMD3bits.CMPMD=0;
 	PMD7bits.CMP1MD=0;
 
-	CMPCON1bits.CMPSIDL=0;
-	CMPCON1bits.INSEL=2;
-	CMPCON1bits.EXTREF=0;
-	CMPCON1bits.CMPPOL=0;
-	CMPCON1bits.RANGE=1;
-	CMPCON1bits.DACOE=0;
-	CMPCON1bits.CMPON=1;
+	CMPCON3bits.CMPSIDL=0;
+	CMPCON3bits.INSEL=1;
+	CMPCON3bits.EXTREF=1;
+	CMPCON3bits.CMPPOL=0;
+	CMPCON3bits.RANGE=1;
+	CMPCON3bits.DACOE=0;
+	CMPCON3bits.CMPON=1;
 }
 
 //Enables the use of interrupts
@@ -371,4 +385,23 @@ void square_pwm(int freq){
 		IOCON2bits.PENL = 1;		
 		IOCON3bits.PENL = 0;
 		__delay_us(del);
+}
+
+void sin_pwm(int period){
+//		int del=period/180;
+		int i=0;
+		while(1){
+			for(i=0; i<180; i++){
+
+				PDC1=(SLT[i]);
+				PDC2=(SLT[((i+60)%180)]);
+				PDC3=(SLT[((i+120)%180)]);
+				__delay_us(72);
+			}
+		}
+}
+
+void test_dcmotor(void){
+		PDC1=12020;
+
 }

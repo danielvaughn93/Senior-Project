@@ -31,6 +31,8 @@
 void blink_led(int numblinks);
 void blink_led2(int numblinks);
 
+void sin_pwm(int period);
+
 void init_pwm(void);
 void init_adc(void);
 void start_PWM(void);
@@ -44,5 +46,6 @@ void disable_interrupts(void);
 void init_interrupts(void);
 int nearestint(float i);
 void square_pwm(int freq);
+void test_dcmotor(void);
 
 #endif
